@@ -1,26 +1,32 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { IAppStore } from './app-store/app-store.interface';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
   title = 'redux-example';
+  showNavBar =  true;
 
-  constructor(private router: Router){
+  constructor(
+    private router: Router,
+    private store: Store<{ navBarStore: IAppStore }>){
+      this.getStoreState();
   }
 
-  goToPage1(){
-    this.router.navigateByUrl('page-1');
+  getStoreState() {
+    this.store.subscribe(
+      (state) => {
+        this.showNavBar = state.navBarStore.show;
+      });
   }
 
-  goToPage2(){
-    this.router.navigateByUrl('page-2');
-  }
-
-  goToPage3(){
-    this.router.navigateByUrl('page-3');
+  redirectTo(url: string) {
+    this.router.navigateByUrl(url);
   }
 }
